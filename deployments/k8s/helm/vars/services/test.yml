@@ -1,0 +1,78 @@
+version: 1.0.0
+
+replicaCount: 1
+
+ingress:
+  enabled: true
+  ingressClassName: public
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 300m
+    nginx.ingress.kubernetes.io/connection-proxy-header: keep-alive
+    nginx.ingress.kubernetes.io/proxy-body-size: 300m
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 300m
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/use-proxy-protocol: "False"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS, PATCH, DELETE"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, X-Process-Key, X-Session-Id, Set-Cookie, Authorization"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+
+
+service:
+  type: NodePort
+  port: 8082
+  targetPort: 8082
+
+ports:
+  - name: http-internal
+    port: 8082
+    targetPort: 8082
+    protocol: TCP
+
+hostAliases: []
+
+extraVolumeMounts: []
+
+extraVolumes: []
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 7013
+  failureThreshold: 25
+  initialDelaySeconds: 120
+  periodSeconds: 5
+  successThreshold: 1
+  timeoutSeconds: 1
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 7013
+  failureThreshold: 25
+  initialDelaySeconds: 125
+  periodSeconds: 5
+  successThreshold: 1
+  timeoutSeconds: 1
+
+resources:
+  limits:
+    cpu: 0.9
+    memory: 2048Mi
+  requests:
+    cpu: 0.5
+    memory: 1024Mi
+
+cronjobs: []
+
+env:
+  DATASOURCE_URL: ${DATASOURCE_URL}
+  DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
+  DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
+
+ 

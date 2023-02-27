@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: changes/create-ticket-tables.sql
+      relativeToChangelogFile: true

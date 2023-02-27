@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%class{50}.%M:%L) - %msg%n</pattern>
+        </layout>
+    </appender>
+
+
+    <springProfile name="prod">
+        <root level="WARN">
+            <appender-ref ref="eventhub"/>
+            <appender-ref ref="stdout"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <root level="WARN">
+            <appender-ref ref="eventhub"/>
+            <appender-ref ref="stdout"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="WARN">
+            <appender-ref ref="stdout"/>
+            <appender-ref ref="eventhub"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="default">
+        <root level="INFO">
+            <appender-ref ref="stdout"/>
+        </root>
+    </springProfile>
+
+</configuration>
